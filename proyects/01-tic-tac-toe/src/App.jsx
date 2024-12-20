@@ -4,29 +4,32 @@ import conffeti from 'canvas-confetti'
 
 import { Square } from './components/Square'
 import { TURN } from './constants'
-import { checkWinnerFrom } from './logic/board'
+import { checkWinnerFrom, checkEndGame } from './logic/board'
 import { WinnerModal } from './components/WinnerModal'
+import { saveGame, resetGameStorage } from './logic/localStorage'
 
 
 
 function App() {
 
-  const [board, setBoard] = useState(Array(9).fill(null))
+  const [board, setBoard] = useState(() => {
+    const boardFromStorege = window.localStorage.getItem('board')
+    return boardFromStorege ? JSON.parse(boardFromStorege) : Array(9).fill(null)
+  })
 
-  const [turn, setTurn] = useState(TURN.X)
+  const [turn, setTurn] = useState(() => {
+    const turnFromStorage = window.localStorage.getItem('turn')
+    return turnFromStorage ?? TURN.X
+  })
   const [winner, setWinner] = useState(null)
 
-
-
-  const checkEndGame = (newBoard) => {
-    // Al llenar completamente el tablero, y no tener ganador
-    return newBoard.every((square) => square !== null)
-  }
 
   const resetGame = () => { // Reseteamos el tablero, los turnos y el ganador.
     setBoard(Array(9).fill(null))
     setTurn(TURN.X)
     setWinner(null)
+
+    resetGameStorage()
   }
 
   const updateBoard = (index) => {
@@ -40,6 +43,10 @@ function App() {
 
     const newTurn = turn === TURN.X ? TURN.O : TURN.X
     setTurn(newTurn) // Actualizamos el turno
+
+    // Guardamos la partida y el turno
+    saveGame(newBoard, newTurn)
+
 
     const newWinner = checkWinnerFrom(newBoard)
     if (newWinner) { // Actualizamos el ganador
