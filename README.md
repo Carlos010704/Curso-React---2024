@@ -4,5 +4,5 @@
 
 
 Proyectos:
-- [00-twitter-follow-card](https://github.com/Carlos010704/Curso-React---2024/tree/main/proyects/00-twitter-follow-card)
-- [01-tic-tac-toe](https://github.com/Carlos010704/Curso-React---2024/tree/main/proyects/01-tic-tac-toe)
+- [01-twitter-follow-card](https://github.com/Carlos010704/Curso-React---2024/tree/main/proyects/01-twitter-follow-card)
+- [02-tic-tac-toe](https://github.com/Carlos010704/Curso-React---2024/tree/main/proyects/02-tic-tac-toe)
