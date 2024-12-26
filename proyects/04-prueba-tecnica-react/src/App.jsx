@@ -8,7 +8,6 @@ const URL_IMG_PREFIX = 'https://cataas.com/cat/'
 export function App() {
     const [fact, setFact] = useState('Lorem ipsum cat fact whatever')
     const [imageUrl, setImageUrl] = useState()
-    const [factError, setFactError] = useState()
 
     // Recuperar la cita al cargar la pagina.
     useEffect(() => {
@@ -23,7 +22,7 @@ export function App() {
 
     // Recuperar la imagen con la cita obtenida
     useEffect(() => {
-        if(!fact) return
+        if (!fact) return
 
         const firtsWord = fact.split(' ', 3).join(' ')
 
@@ -38,9 +37,19 @@ export function App() {
             })
     }, [fact])
 
+    const handleCick = () => {
+        fetch(ENPOINT_FACT)
+            .then(res => res.json())
+            .then(data => {
+                const { fact } = data
+                setFact(fact)
+            })
+    }
+
     return (
         <main>
             <h2>Renderización de la App</h2>
+            <button onClick={handleCick} >Get New Fact</button>
             {fact && <p>{fact}</p>}
             {imageUrl && <img src={imageUrl} alt={`Image extrated using tha firts word: ${fact}`} />}
 
