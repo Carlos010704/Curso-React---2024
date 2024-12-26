@@ -1,36 +1,49 @@
 import { useEffect, useState } from "react"
+import './App.css'
 
 const ENPOINT_FACT = 'https://catfact.ninja/fact'
-// const ENPOINT_IMG = `https://cataas.com/cat/says/${firtsWord}?size=50&color=red&json=true`
+// const ENPOINT_IMG = `https://cataas.com/cat/says/${firtsWord}?fontSize=50&fontColor=red&json=true`
+const URL_IMG_PREFIX = 'https://cataas.com/cat/'
 
 export function App() {
     const [fact, setFact] = useState('Lorem ipsum cat fact whatever')
     const [imageUrl, setImageUrl] = useState()
+    const [factError, setFactError] = useState()
 
+    // Recuperar la cita al cargar la pagina.
     useEffect(() => {
         fetch(ENPOINT_FACT)
             .then(res => res.json())
             .then(data => {
                 const { fact } = data
-                setFact(data.fact)
-
-                const firtsWord = fact.split(' ')[0]
-
-                fetch(`https://cataas.com/cat/says/${firtsWord}?size=50&color=red&json=true`)
-                    .then(res => res.json())
-                    .then(response => {
-                        const { url } = response
-                        setImageUrl()
-                    })
+                setFact(fact)
 
             })
     }, [])
+
+    // Recuperar la imagen con la cita obtenida
+    useEffect(() => {
+        if(!fact) return
+
+        const firtsWord = fact.split(' ', 3).join(' ')
+
+        fetch(`https://cataas.com/cat/says/${firtsWord}?fontSize=50&fontColor=red&json=true`)
+
+            .then(res => res.json())
+            .then(response => {
+                const { _id } = response
+
+                const url_img = `${URL_IMG_PREFIX}${_id}/says/${firtsWord}?fontSize=50&fontColor=red`
+                setImageUrl(url_img)
+            })
+    }, [fact])
 
     return (
         <main>
             <h2>Renderización de la App</h2>
             {fact && <p>{fact}</p>}
-            {imageUrl && <img src="{imageUrl}" alt={`Image extrated using tha firts word: ${firtsWord}`} />}
+            {imageUrl && <img src={imageUrl} alt={`Image extrated using tha firts word: ${fact}`} />}
+
         </main>
     )
 }
